@@ -9,7 +9,7 @@ import { Account } from './models/account.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-
+  isError : any;
   tokenInput = localStorage.getItem('userToken') || '';
 
   loggedInUserDetail: Account = {
@@ -50,6 +50,13 @@ export class AppComponent implements OnInit {
       },
       error: (err) => {
         console.error("API Error:", err);
+        if (err.status === 0) {
+          this.isError = 'Unable to connect to the server. This may be due to CORS configuration issues or network problems.';
+        } else {
+          this.isError = err?.error?.message ||
+                          err?.message ||
+                          `Error ${err.status}: ${err.statusText || 'An unexpected error occurred'}`;
+        }
       }
     });
   }
